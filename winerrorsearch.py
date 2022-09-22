@@ -48,7 +48,7 @@ if __name__ == "__main__":
     console = Console()
 
     parser = argparse.ArgumentParser(description="Search for a Win32 Error Code")
-    parser.add_argument('-t', '--type', help="The type of input you are searching for. Default: message", choices=["message", "code", "description", "auto"], default="auto")
+    parser.add_argument('-t', '--type', help="The type of input you are searching for. Default: auto", choices=["message", "code", "description", "auto"], default="auto")
     parser.add_argument('search_term', help="The term to search for, partial matches apply")
 
     args = parser.parse_args()
