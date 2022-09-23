@@ -10,25 +10,20 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-REGEX_ERROR_CODE = re.compile(r'<p>(\d+)\s\((0x[A-F0-9]+)\)</p>')
-REGEX_ERROR_MSG = re.compile(r'\<span id="([A-Z_]+)"\>')
-REGEX_ERROR_DESC = re.compile(r'<p>([\w\s]+\.)</p>')
+REGEX_ERROR_BLOCK = re.compile(r'<dt>\s*<p><span id="([A-Z_]+)"></span><span.+></span>\s*<strong>.+</strong>\s*</p>\s*</dt>\s*<dd>\s*<dl>\s*<dt>\s*<p>(\d+)\s\((0x[A-F0-9]+)\)</p>\s*</dt>\s*<dt>\s*<p>([\w\s]+\.)</p>\s*</dt>\s*</dl>')
 
 
 def convertErrorCodesTupleToDict(errorcodetuple):
     return [{
             "message": e[0],
-            "code": list(e[1]),
-            "description": e[2]
+            "code": [e[1], e[2]],
+            "description": e[3]
         } for e in errorcodetuple]
 
 
 def parseMSErrorCodeResponse(resp: requests.Response):
-    messages = REGEX_ERROR_MSG.findall(resp.text)
-    codes = REGEX_ERROR_CODE.findall(resp.text)
-    descriptions = REGEX_ERROR_DESC.findall(resp.text)
-    zipped = zip(messages, codes, descriptions)
-    return zipped
+    resp = resp.text.replace("\r\n", "").replace('\t', '')
+    return REGEX_ERROR_BLOCK.findall(resp)
 
 def findErrorCode(searchinput:str, searchtype: str, errorCodes: list=[]) -> list:
     return list(filter(lambda e: searchinput in e[searchtype], errorCodes))
