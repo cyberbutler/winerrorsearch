@@ -68,7 +68,7 @@ if __name__ == "__main__":
         allErrors = convertErrorCodesTupleToDict(allErrorsTuple)
 
         if args.save:
-            console.print("[[green]+[/green]] Saving to results ~/.winerrorcodes.json")
+            console.print("[[green]+[/green]] Saving results to ~/.winerrorcodes.json")
             with open(f"{os.path.expanduser('~')}/.winerrorcodes.json", "w") as f:
                 f.write(json.dumps(allErrors))
 
